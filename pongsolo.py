@@ -2,6 +2,9 @@ import pygame
 from pong import Game 
 
 
+
+
+
 whidth, heigth = 700, 500
 window = pygame.display.set_mode((whidth,heigth))
 
@@ -15,13 +18,15 @@ while run:
         if event.type == pygame.QUIT:
             run = False
             break
-    keys= pygame.key.get_pressed()
-    if keys[pygame.K_w]:_
-        game.move_paddle(left=True, up=True)
+
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_w]:
+            game.move_paddle(left=True, up=True)
     if keys[pygame.K_s]:
-        game.move_paddle(left=True,up=False)
+            game.move_paddle(left=True, up=False)
         
-    game.loop()
+    game_info = game.loop()
+    print(game_info.left_score,game_info.right_score)
     game.draw(False,True)
     pygame.display.update()
 
