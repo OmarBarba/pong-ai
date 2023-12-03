@@ -108,27 +108,28 @@ def eval_genomes(genomes, config):
 
 
 def run_neat(config):
-    #p = neat.Checkpointer.restore_checkpoint('neat-checkpoint-7')
+    #p = neat.Checkpointer.restore_checkpoint('neat-checkpoint-8')
     p = neat.Population(config)
     p.add_reporter(neat.StdOutReporter(True))
     stats = neat.StatisticsReporter()
     p.add_reporter(stats)
     p.add_reporter(neat.Checkpointer(1))
 
-    winner = p.run(eval_genomes, 50)
+    winner = p.run(eval_genomes, 30)
     with open("best.pickle", "wb") as f:
         pickle.dump(winner, f)
 
 
-def test_ai(config):
-    width, height = 700, 500
-    window = pygame.display.set_mode((width, height))
-
+def test_best_network(config):
     with open("best.pickle", "rb") as f:
         winner = pickle.load(f)
+    winner_net = neat.nn.FeedForwardNetwork.create(winner, config)
 
-    game = PongGame(window, width, height)
-    game.test_ai(winner, config)
+    width, height = 700, 500
+    win = pygame.display.set_mode((width, height))
+    pygame.display.set_caption("Pong")
+    pong = PongGame(win, width, height)
+    pong.test_ai(winner_net)
 
 
 if __name__ == "__main__":
@@ -139,6 +140,6 @@ if __name__ == "__main__":
                          neat.DefaultSpeciesSet, neat.DefaultStagnation,
                          config_path)
     run_neat(config)
-    test_ai(config)
+    test_best_network(config)
 
 
